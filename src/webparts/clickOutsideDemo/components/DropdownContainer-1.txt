@@ -1,0 +1,70 @@
+// this is the initial example
+
+import * as React from 'react';
+import styles from './DropdownContainer.module.scss';
+import { IDropdownContainerProps } from './IDropdownContainerProps';
+import { IDropdownContainerState } from './IDropdownContainerState';
+
+
+export default class DropdownContainer extends React.Component<IDropdownContainerProps, IDropdownContainerState> {
+  private dropdownRef: HTMLElement;
+  private buttonRef: HTMLElement;
+
+  constructor(props: IDropdownContainerProps) { 
+    super(props); 
+    this.state = { 
+      dropdownOpen: false 
+    } 
+  } 
+
+  public componentDidMount(){ 
+    document.addEventListener('click', this.handleOutsideClick, false); 
+  } 
+      
+  public componentWillUnmount(){ 
+    document.removeEventListener('click', this.handleOutsideClick, false); 
+  } 
+    
+
+  public render(): React.ReactElement<IDropdownContainerProps> {
+    return (
+      <div>
+        <button onClick={(e) => this.buttonClick(e)} ref={el => this.buttonRef = el}>Toggle dropdown</button> 
+        { this.state.dropdownOpen && (
+          <div className={styles.dropdown} ref={el => this.dropdownRef = el}>This is the dropdown</div>
+        )}
+          
+      </div>
+    );
+  }
+
+  private buttonClick = (e) => {
+    // keep the button click from propagating up and reloading the page
+    e.preventDefault();
+    e.stopPropagation();
+
+    // set the state for dropdownOpen to be the opposite of what it currently is
+    this.setState({
+      dropdownOpen: !this.state.dropdownOpen
+    });
+  }
+
+  private handleOutsideClick = (event) : void => {
+    // we set a variable to reference the ref
+    var dropdown = this.dropdownRef;
+    var button = this.buttonRef;
+
+    if( dropdown ){ // if the dropdown exists
+      if( dropdown.contains(event.target) || button.contains(event.target)){
+        // this means that we've clicked inside the element, so we don't want anything to happen
+        return;
+      }
+    } else {
+      // the dropdown doesn't exist yet, so just return
+      return;
+    }
+
+    // the click is outside of our element, so now we want to do something -- to close the dropdown
+    this.buttonClick(event);
+  }
+}
