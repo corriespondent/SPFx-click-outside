@@ -7,6 +7,8 @@ This is a demo for adding click-outside interactions to close a dropdown by usin
 * How to use refs with event listeners for click outside functionality
 * How to use callback functions to allow a component to affect its parent’s state
 
+See blog post at: https://pixelmill.com/spfx-react-dropdown-and-click-outside/
+
 ### Building the code
 
 ```bash
